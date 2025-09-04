@@ -7,8 +7,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   // metadataBase: new URL('https://chat.vercel.ai'),
-  title: "Elle AI",
-  description: "Elle AI--Startup Legal AI",
+  title: "Momentum 90",
+  description: "Momentum 90--The AI-powered productivity app.",
   icons: {
     icon: "/favicon.svg",
   },

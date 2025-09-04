@@ -148,7 +148,7 @@ importers:
         version: 1.4.2(next@15.2.2-canary.1(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       gensx:
         specifier: ^0.3.5
-        version: 0.3.41(@types/react@18.3.24)(bufferutil@4.0.9)(tslib@2.8.1)
+        version: 0.3.41(@types/react@18.3.24)(bufferutil@4.0.9)(rollup@2.79.2)(tslib@2.8.1)
       lucide-react:
         specifier: ^0.446.0
         version: 0.446.0(react@18.2.0)
@@ -280,7 +280,7 @@ importers:
         specifier: ^0.25.0
         version: 0.25.0
       eslint:
-        specifier: ^9.31.0
+        specifier: ^9.34.0
         version: 9.34.0(jiti@1.21.7)
       eslint-config-next:
         specifier: 14.2.5
@@ -4844,6 +4844,11 @@ packages:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
 
+  rollup@2.79.2:
+    resolution: {integrity: sha512-fS6iqSPZDs3dr/y7Od6y5nha8dW1YnbgtsyotCVvoFGKbERG++CVRFv1meyGDE1SNItQA8BrnCw7ScdAhRJ3XQ==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+
   rope-sequence@1.3.4:
     resolution: {integrity: sha512-UT5EDe2cu2E/6O4igUr5PSFs23nvvukicWHx6GnOPlHAiiYbzNuCRQCuiUdHJQcqKalLKlrYJnjY0ySGsXNQXQ==}
 
@@ -7146,40 +7151,49 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@rollup/plugin-commonjs@25.0.8':
+  '@rollup/plugin-commonjs@25.0.8(rollup@2.79.2)':
     dependencies:
-      '@rollup/pluginutils': 5.2.0
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.30.18
+    optionalDependencies:
+      rollup: 2.79.2
 
-  '@rollup/plugin-json@6.1.0':
+  '@rollup/plugin-json@6.1.0(rollup@2.79.2)':
     dependencies:
-      '@rollup/pluginutils': 5.2.0
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
+    optionalDependencies:
+      rollup: 2.79.2
 
-  '@rollup/plugin-node-resolve@15.3.1':
+  '@rollup/plugin-node-resolve@15.3.1(rollup@2.79.2)':
     dependencies:
-      '@rollup/pluginutils': 5.2.0
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-module: 1.0.0
       resolve: 1.22.10
+    optionalDependencies:
+      rollup: 2.79.2
 
-  '@rollup/plugin-typescript@11.1.6(tslib@2.8.1)(typescript@5.9.2)':
+  '@rollup/plugin-typescript@11.1.6(rollup@2.79.2)(tslib@2.8.1)(typescript@5.9.2)':
     dependencies:
-      '@rollup/pluginutils': 5.2.0
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
       resolve: 1.22.10
       typescript: 5.9.2
     optionalDependencies:
+      rollup: 2.79.2
       tslib: 2.8.1
 
-  '@rollup/pluginutils@5.2.0':
+  '@rollup/pluginutils@5.2.0(rollup@2.79.2)':
     dependencies:
       '@types/estree': 1.0.8
       estree-walker: 2.0.2
       picomatch: 4.0.3
+    optionalDependencies:
+      rollup: 2.79.2
 
   '@rtsao/scc@1.1.0': {}
 
@@ -8826,13 +8840,13 @@ snapshots:
     dependencies:
       next: 15.2.2-canary.1(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  gensx@0.3.41(@types/react@18.3.24)(bufferutil@4.0.9)(tslib@2.8.1):
+  gensx@0.3.41(@types/react@18.3.24)(bufferutil@4.0.9)(rollup@2.79.2)(tslib@2.8.1):
     dependencies:
       '@hono/node-server': 1.19.1(hono@4.9.5)
-      '@rollup/plugin-commonjs': 25.0.8
-      '@rollup/plugin-json': 6.1.0
-      '@rollup/plugin-node-resolve': 15.3.1
-      '@rollup/plugin-typescript': 11.1.6(tslib@2.8.1)(typescript@5.9.2)
+      '@rollup/plugin-commonjs': 25.0.8(rollup@2.79.2)
+      '@rollup/plugin-json': 6.1.0(rollup@2.79.2)
+      '@rollup/plugin-node-resolve': 15.3.1(rollup@2.79.2)
+      '@rollup/plugin-typescript': 11.1.6(rollup@2.79.2)(tslib@2.8.1)(typescript@5.9.2)
       ajv: 8.17.1
       axios: 1.11.0
       chokidar: 4.0.3
@@ -8845,11 +8859,11 @@ snapshots:
       hono: 4.9.5
       ini: 5.0.0
       ink: 5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1)
-      ink-big-text: 2.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))(react@18.3.1)
-      ink-gradient: 3.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))
-      ink-select-input: 6.2.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))(react@18.3.1)
-      ink-spinner: 5.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))(react@18.3.1)
-      ink-text-input: 6.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))(react@18.3.1)
+      ink-big-text: 2.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))(react@18.3.1)
+      ink-gradient: 3.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))
+      ink-select-input: 6.2.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))(react@18.3.1)
+      ink-spinner: 5.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))(react@18.3.1)
+      ink-text-input: 6.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))(react@18.3.1)
       open: 10.2.0
       react: 18.3.1
       typescript: 5.9.2
@@ -9049,14 +9063,14 @@ snapshots:
 
   ini@5.0.0: {}
 
-  ink-big-text@2.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))(react@18.3.1):
+  ink-big-text@2.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))(react@18.3.1):
     dependencies:
       cfonts: 3.3.0
       ink: 5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1)
       prop-types: 15.8.1
       react: 18.3.1
 
-  ink-gradient@3.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0)):
+  ink-gradient@3.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1)):
     dependencies:
       '@types/gradient-string': 1.1.6
       gradient-string: 2.0.2
@@ -9064,20 +9078,20 @@ snapshots:
       prop-types: 15.8.1
       strip-ansi: 7.1.0
 
-  ink-select-input@6.2.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))(react@18.3.1):
+  ink-select-input@6.2.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))(react@18.3.1):
     dependencies:
       figures: 6.1.0
       ink: 5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1)
       react: 18.3.1
       to-rotated: 1.0.0
 
-  ink-spinner@5.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))(react@18.3.1):
+  ink-spinner@5.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))(react@18.3.1):
     dependencies:
       cli-spinners: 2.9.2
       ink: 5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1)
       react: 18.3.1
 
-  ink-text-input@6.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.2.0))(react@18.3.1):
+  ink-text-input@6.0.0(ink@5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1))(react@18.3.1):
     dependencies:
       chalk: 5.6.0
       ink: 5.2.1(@types/react@18.3.24)(bufferutil@4.0.9)(react@18.3.1)
@@ -10460,6 +10474,11 @@ snapshots:
   retry@0.13.1: {}
 
   reusify@1.1.0: {}
+
+  rollup@2.79.2:
+    optionalDependencies:
+      fsevents: 2.3.3
+    optional: true
 
   rope-sequence@1.3.4: {}
 

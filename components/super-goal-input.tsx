@@ -152,16 +152,6 @@ export default function SuperGoalInput() {
   return (
     <section className="py-16 px-6">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            What's Your Super Goal?
-          </h2>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-            Define your ultimate objective and let AI guide you towards
-            achieving it
-          </p>
-        </div>
-
         {!submittedGoal && (
           <Card className="max-w-2xl mx-auto">
             <CardContent className="p-6">

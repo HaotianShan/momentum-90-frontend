@@ -39,12 +39,12 @@ export default function HeroSection() {
           className="text-5xl md:text-[5.5rem] font-bold text-gray-900 mb-5"
           style={{ letterSpacing: "-0.03em" }}
         >
-          Startup
+          What's Your Super Goal?
           <br />
-          Legal AI
         </h1>
         <p className="text-xl text-gray-700 mb-10 max-w-3xl mx-auto">
-          Get instant AI legal guidance for startups
+          Define your ultimate objective and let AI guide you towards achieving
+          it
         </p>
       </div>
     </section>
