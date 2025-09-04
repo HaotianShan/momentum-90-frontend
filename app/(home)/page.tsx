@@ -1,5 +1,5 @@
 import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
+
 import HeroSection from "@/components/hero";
 import SuperGoalInput from "@/components/super-goal-input";
 
@@ -12,7 +12,6 @@ export default function HomePage() {
           <HeroSection />
           <SuperGoalInput />
         </main>
-        <Footer />
       </div>
     </div>
   );

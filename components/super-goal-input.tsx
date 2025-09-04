@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { submitSuperGoal, checkUserLoggedIn } from "@/app/actions";
 import { toast } from "sonner";
 import Image from "next/image";
+import { ArrowRightIcon, TargetIcon, SparklesIcon } from "@/components/icons";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -23,6 +24,7 @@ interface PlanResponse {
 export default function SuperGoalInput() {
   const [superGoal, setSuperGoal] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [submittedGoal, setSubmittedGoal] = useState("");
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
@@ -140,7 +142,13 @@ export default function SuperGoalInput() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await handleGoalSubmission(superGoal);
+    if (superGoal.trim()) {
+      setIsAnimating(true);
+      setTimeout(() => {
+        handleGoalSubmission(superGoal.trim());
+        setIsAnimating(false);
+      }, 300);
+    }
   };
 
   const handleInputClick = () => {
@@ -149,41 +157,109 @@ export default function SuperGoalInput() {
     }
   };
 
+  const exampleGoals = [
+    "Master guitar in 90 days",
+    "Launch my online business",
+    "Write my first novel",
+    "Learn web development",
+    "Run a marathon",
+  ];
+
   return (
-    <section className="py-16 px-6">
+    <section className="py-2 px-6">
       <div className="max-w-4xl mx-auto">
         {!submittedGoal && (
-          <Card className="max-w-2xl mx-auto">
-            <CardContent className="p-6">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder={
-                      isAuthenticated
-                        ? "Enter your super goal..."
-                        : "Click to login and set your super goal"
-                    }
-                    value={superGoal}
-                    onChange={(e) => setSuperGoal(e.target.value)}
-                    onClick={handleInputClick}
-                    className="text-lg py-4 px-4 border-2 border-gray-200 focus:border-[#FC7B11] focus:ring-[#FC7B11] transition-all duration-200"
-                    disabled={isLoading}
-                  />
+          <div className="w-full max-w-2xl mx-auto animate-fade-in">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Input Section */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-hero rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-all"></div>
+                <div className="relative bg-card border-2 border-border hover:border-primary/50 transition-all rounded-2xl p-1 shadow-card hover:shadow-glow">
+                  <div className="relative">
+                    <TargetIcon className="absolute left-6 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6 group-hover:text-primary transition-colors" />
+                    <Input
+                      type="text"
+                      placeholder={
+                        isAuthenticated
+                          ? "What's your epic quest? (e.g., Master guitar, Launch a startup, Write a novel...)"
+                          : "Click to login and set your super goal"
+                      }
+                      value={superGoal}
+                      onChange={(e) => setSuperGoal(e.target.value)}
+                      onClick={handleInputClick}
+                      className="pl-16 pr-6 py-8 text-lg rounded-xl border-0 bg-transparent focus:ring-0 placeholder:text-muted-foreground/70"
+                      disabled={isLoading}
+                    />
+                  </div>
                 </div>
+              </div>
 
-                {isAuthenticated && (
+              {/* Example Goals */}
+              {isAuthenticated && (
+                <div
+                  className="text-center animate-fade-in"
+                  style={{ animationDelay: "0.2s" }}
+                >
+                  <p className="text-sm text-muted-foreground mb-3 font-medium">
+                    🔥 Popular quests:
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {exampleGoals.map((example, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setSuperGoal(example)}
+                        className="px-4 py-2 text-sm bg-muted/50 hover:bg-primary/10 text-muted-foreground hover:text-primary border border-transparent hover:border-primary/20 rounded-full transition-all hover-scale"
+                      >
+                        {example}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Submit Button */}
+              {isAuthenticated && (
+                <div
+                  className={`transition-all duration-300 ${
+                    isAnimating ? "animate-bounce-gentle" : ""
+                  }`}
+                >
                   <Button
                     type="submit"
-                    disabled={isLoading || !superGoal.trim()}
-                    className="w-full bg-[#FC7B11] hover:bg-[#E66A0A] text-white font-semibold py-3 px-6 rounded-md transition-all duration-200"
+                    variant="hero"
+                    size="lg"
+                    disabled={!superGoal.trim() || isAnimating || isLoading}
+                    className="w-full py-8 text-xl font-bold rounded-2xl group relative overflow-hidden"
                   >
-                    {isLoading ? "Saving..." : "Save Super Goal"}
+                    <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="relative flex items-center justify-center gap-3">
+                      <SparklesIcon className="w-6 h-6" />
+                      {isLoading
+                        ? "Saving..."
+                        : isAnimating
+                        ? "Creating Your Adventure..."
+                        : "Begin My 90-Day Quest"}
+                      <ArrowRightIcon className="w-6 h-6 transition-transform group-hover:translate-x-2" />
+                    </div>
                   </Button>
-                )}
-              </form>
-            </CardContent>
-          </Card>
+                </div>
+              )}
+
+              {/* Encouragement */}
+              {isAuthenticated && (
+                <div
+                  className="text-center animate-fade-in"
+                  style={{ animationDelay: "0.4s" }}
+                >
+                  <p className="text-sm text-muted-foreground">
+                    ✨ <span className="font-medium">Join thousands</span> who've
+                    transformed their dreams into reality
+                  </p>
+                </div>
+              )}
+            </form>
+          </div>
         )}
 
         {submittedGoal && (
