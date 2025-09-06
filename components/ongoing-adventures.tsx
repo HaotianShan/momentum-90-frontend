@@ -153,7 +153,7 @@ export const OngoingAdventures = () => {
             <Card 
               key={adventure.id} 
               className="p-6 hover:shadow-lg transition-all duration-200 cursor-pointer group"
-              onClick={() => router.push(`/adventure?id=${adventure.id}`)}
+              onClick={() => router.push(`/adventure?id=${adventure.id}&goal=${encodeURIComponent(adventure.superGoal)}`)}
             >
               <div className="space-y-4">
                 {/* Header */}
@@ -214,7 +214,7 @@ export const OngoingAdventures = () => {
                   variant={isCompleted ? "outline" : "default"}
                   onClick={(e) => {
                     e.stopPropagation();
-                    router.push(`/adventure?id=${adventure.id}`);
+                    router.push(`/adventure?id=${adventure.id}&goal=${encodeURIComponent(adventure.superGoal)}`);
                   }}
                 >
                   <Play className="w-4 h-4" />

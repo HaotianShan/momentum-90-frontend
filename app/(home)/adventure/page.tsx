@@ -40,7 +40,9 @@ function AdventureContent() {
 
   useEffect(() => {
     if (!goal && !adventureId) {
-      toast.error("No goal or adventure found. Please set your super goal first.");
+      toast.error(
+        "No goal or adventure found. Please set your super goal first."
+      );
       router.push("/");
       return;
     }
@@ -52,18 +54,27 @@ function AdventureContent() {
           const response = await fetch(`/api/adventure/${adventureId}`);
           if (response.ok) {
             const adventure = await response.json();
-            if (adventure.quests) {
+            if (adventure.quests && adventure.quests.length > 0) {
               setQuests(adventure.quests);
               setPlan({
                 success: true,
                 goal: adventure.superGoal,
                 structured_plan: {
                   monthly_actions: {},
-                  weekly_milestones: {}
-                }
+                  weekly_milestones: {},
+                },
               });
               setIsLoading(false);
               return;
+            } else {
+              // Adventure exists but no quests generated yet, use the superGoal from the adventure
+              if (adventure.superGoal) {
+                // Set the goal from the adventure and continue to generate plan
+                const url = new URL(window.location.href);
+                url.searchParams.set('goal', adventure.superGoal);
+                window.history.replaceState({}, '', url.toString());
+                // Continue to plan generation below
+              }
             }
           }
         }
@@ -103,6 +114,28 @@ function AdventureContent() {
           setPlan(data);
           const newQuests = convertPlanToQuests(data);
           setQuests(newQuests);
+          
+          // Save the generated quests to the database if we have an adventure ID
+          if (adventureId && session?.user?.id) {
+            try {
+              await fetch("/api/adventure/save-progress", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  adventureId: adventureId,
+                  userId: session.user.id,
+                  quests: newQuests,
+                  completedQuests: [],
+                  totalXP: 0,
+                }),
+              });
+            } catch (error) {
+              console.error("Failed to save generated quests:", error);
+              // Don't show error to user as the quests are still displayed
+            }
+          }
         } else {
           toast.error("Failed to generate plan");
         }
@@ -122,21 +155,23 @@ function AdventureContent() {
     let questNumber = 1;
 
     // Convert weekly milestones to quests
-    Object.entries(plan.structured_plan.weekly_milestones).forEach(([week, milestone]) => {
-      const difficulty = getDifficultyForWeek(questNumber);
-      const xp = getXPForDifficulty(difficulty);
-      
-      quests.push({
-        number: questNumber,
-        title: formatWeekTitle(week),
-        description: milestone,
-        completed: false, // You can implement completion tracking later
-        reward: getRewardForWeek(questNumber),
-        difficulty,
-        xp,
-      });
-      questNumber++;
-    });
+    Object.entries(plan.structured_plan.weekly_milestones).forEach(
+      ([week, milestone]) => {
+        const difficulty = getDifficultyForWeek(questNumber);
+        const xp = getXPForDifficulty(difficulty);
+
+        quests.push({
+          number: questNumber,
+          title: formatWeekTitle(week),
+          description: milestone,
+          completed: false, // You can implement completion tracking later
+          reward: getRewardForWeek(questNumber),
+          difficulty,
+          xp,
+        });
+        questNumber++;
+      }
+    );
 
     return quests;
   };
@@ -151,12 +186,18 @@ function AdventureContent() {
 
   const getXPForDifficulty = (difficulty: Quest["difficulty"]): number => {
     switch (difficulty) {
-      case "Novice": return 100;
-      case "Explorer": return 200;
-      case "Adventurer": return 300;
-      case "Hero": return 500;
-      case "Legend": return 1000;
-      default: return 100;
+      case "Novice":
+        return 100;
+      case "Explorer":
+        return 200;
+      case "Adventurer":
+        return 300;
+      case "Hero":
+        return 500;
+      case "Legend":
+        return 1000;
+      default:
+        return 100;
     }
   };
 
@@ -174,15 +215,13 @@ function AdventureContent() {
       "Become a role model",
       "Achieve expert status",
       "Reach legendary level",
-      "Complete your transformation"
+      "Complete your transformation",
     ];
     return rewards[Math.min(weekNumber - 1, rewards.length - 1)];
   };
 
   const formatWeekTitle = (week: string): string => {
-    return week
-      .replace("_", " ")
-      .replace(/\b\w/g, (l) => l.toUpperCase());
+    return week.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   const handleQuestToggle = async (questNumber: number, completed: boolean) => {
@@ -192,32 +231,31 @@ function AdventureContent() {
     }
 
     setIsSaving(true);
-    
+
     try {
       // Update local state
-      const updatedQuests = quests.map(quest => 
-        quest.number === questNumber 
-          ? { ...quest, completed }
-          : quest
+      const updatedQuests = quests.map((quest) =>
+        quest.number === questNumber ? { ...quest, completed } : quest
       );
       setQuests(updatedQuests);
 
       // Calculate completed quests and total XP
       const completedQuests = updatedQuests
-        .filter(quest => quest.completed)
-        .map(quest => quest.number);
-      
+        .filter((quest) => quest.completed)
+        .map((quest) => quest.number);
+
       const totalXP = updatedQuests
-        .filter(quest => quest.completed)
+        .filter((quest) => quest.completed)
         .reduce((sum, quest) => sum + quest.xp, 0);
 
       // Save to database
-      const response = await fetch('/api/adventure/save-progress', {
-        method: 'POST',
+      const response = await fetch("/api/adventure/save-progress", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          adventureId: adventureId,
           userId: session.user.id,
           quests: updatedQuests,
           completedQuests,
@@ -226,17 +264,17 @@ function AdventureContent() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save progress');
+        throw new Error("Failed to save progress");
       }
 
       toast.success(completed ? "Quest completed! 🎉" : "Quest unmarked");
     } catch (error) {
-      console.error('Failed to save quest progress:', error);
+      console.error("Failed to save quest progress:", error);
       toast.error("Failed to save progress. Please try again.");
-      
+
       // Revert local state on error
-      const revertedQuests = quests.map(quest => 
-        quest.number === questNumber 
+      const revertedQuests = quests.map((quest) =>
+        quest.number === questNumber
           ? { ...quest, completed: !completed }
           : quest
       );
@@ -250,8 +288,10 @@ function AdventureContent() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Creating your epic adventure...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+          <p className="text-muted-foreground">
+            Creating your epic adventure...
+          </p>
         </div>
       </div>
     );
@@ -261,9 +301,12 @@ function AdventureContent() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-4 max-w-md mx-auto p-6">
-          <h1 className="text-2xl font-bold text-foreground">Adventure Not Found</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Adventure Not Found
+          </h1>
           <p className="text-muted-foreground">
-            We couldn't generate your adventure plan. Please try setting your super goal again.
+            We couldn't generate your adventure plan. Please try setting your
+            super goal again.
           </p>
           <div className="flex gap-3 justify-center">
             <Button onClick={() => router.push("/")} variant="outline">
@@ -297,7 +340,7 @@ function AdventureContent() {
             <h1 className="text-lg font-semibold text-foreground">
               Your Adventure
             </h1>
-            <div className="w-20"></div> {/* Spacer for centering */}
+            <div className="w-20" /> {/* Spacer for centering */}
           </div>
         </div>
       </div>
@@ -309,9 +352,9 @@ function AdventureContent() {
             Saving progress...
           </div>
         )}
-        <AdventureRoadmap 
-          goal={plan.goal} 
-          quests={quests} 
+        <AdventureRoadmap
+          goal={plan.goal}
+          quests={quests}
           onQuestToggle={handleQuestToggle}
         />
       </div>
@@ -321,14 +364,16 @@ function AdventureContent() {
 
 export default function AdventurePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Loading your adventure...</p>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+            <p className="text-muted-foreground">Loading your adventure...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <AdventureContent />
     </Suspense>
   );

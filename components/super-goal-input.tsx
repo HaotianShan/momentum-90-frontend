@@ -76,9 +76,9 @@ export default function SuperGoalInput() {
       if (result.success) {
         toast.success("Your Super Goal has been saved!");
         setSuperGoal("");
-        // Redirect to adventure page with the adventure ID
+        // Redirect to adventure page with both the adventure ID and goal
         if (result.adventureId) {
-          router.push(`/adventure?id=${result.adventureId}`);
+          router.push(`/adventure?id=${result.adventureId}&goal=${encodeURIComponent(goal)}`);
         } else {
           // Fallback to goal parameter if no adventure ID
           router.push(`/adventure?goal=${encodeURIComponent(goal)}`);

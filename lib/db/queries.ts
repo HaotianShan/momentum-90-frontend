@@ -91,6 +91,7 @@ export async function getAllUserPlans(): Promise<UserPlans[]> {
 }
 
 export async function saveAdventureProgress(
+  adventureId: string,
   userId: string, 
   quests: any[], 
   completedQuests: number[], 
@@ -104,7 +105,7 @@ export async function saveAdventureProgress(
         completedQuests: completedQuests,
         totalXP: totalXP
       })
-      .where(eq(userPlans.userId, userId))
+      .where(and(eq(userPlans.id, adventureId), eq(userPlans.userId, userId)))
       .returning();
     return result[0];
   } catch (error) {

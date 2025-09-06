@@ -49,6 +49,7 @@ function LoginContent() {
         setIsSuccessful(true);
         router.refresh();
         // Check if there's a pending super goal
+        // biome-ignore lint/correctness/noSwitchDeclarations: <explanation>
         const pendingGoal = sessionStorage.getItem("pendingSuperGoal");
         if (pendingGoal) {
           sessionStorage.removeItem("pendingSuperGoal");

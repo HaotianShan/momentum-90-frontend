@@ -10,14 +10,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { userId, quests, completedQuests, totalXP } = await request.json();
+    const { adventureId, userId, quests, completedQuests, totalXP } = await request.json();
 
     // Verify the user is updating their own data
     if (session.user.id !== userId) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const result = await saveAdventureProgress(userId, quests, completedQuests, totalXP);
+    // Verify adventureId is provided
+    if (!adventureId) {
+      return NextResponse.json({ error: "Adventure ID is required" }, { status: 400 });
+    }
+
+    const result = await saveAdventureProgress(adventureId, userId, quests, completedQuests, totalXP);
 
     return NextResponse.json({ success: true, data: result });
   } catch (error) {
