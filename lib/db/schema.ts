@@ -32,6 +32,9 @@ export const userPlans = pgTable("user_plans", {
   superGoal: text("super_goal"),
   startDate: date("start_date").defaultNow(),
   bannerUrl: text("banner_url"),
+  quests: jsonb("quests"), // Store quest data with completion status
+  completedQuests: jsonb("completed_quests").default([]), // Array of completed quest numbers
+  totalXP: jsonb("total_xp").default(0), // Total XP earned
 });
 
 export type UserPlans = InferSelectModel<typeof userPlans>;

@@ -17,8 +17,8 @@ export async function submitSuperGoal(superGoal: string) {
   }
 
   try {
-    await createUserPlan(session.user.id, superGoal);
-    return { success: true };
+    const userPlan = await createUserPlan(session.user.id, superGoal);
+    return { success: true, adventureId: userPlan.id };
   } catch (error) {
     console.error("Failed to submit super goal:", error);
     return { success: false, error: "Failed to save super goal" };

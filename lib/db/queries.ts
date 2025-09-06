@@ -89,3 +89,52 @@ export async function getAllUserPlans(): Promise<UserPlans[]> {
     throw error;
   }
 }
+
+export async function saveAdventureProgress(
+  userId: string, 
+  quests: any[], 
+  completedQuests: number[], 
+  totalXP: number
+): Promise<UserPlans> {
+  try {
+    const result = await db
+      .update(userPlans)
+      .set({ 
+        quests: quests,
+        completedQuests: completedQuests,
+        totalXP: totalXP
+      })
+      .where(eq(userPlans.userId, userId))
+      .returning();
+    return result[0];
+  } catch (error) {
+    console.error("Failed to save adventure progress to database");
+    throw error;
+  }
+}
+
+export async function getUserAdventures(userId: string): Promise<UserPlans[]> {
+  try {
+    return await db
+      .select()
+      .from(userPlans)
+      .where(eq(userPlans.userId, userId))
+      .orderBy(desc(userPlans.createdAt));
+  } catch (error) {
+    console.error("Failed to get user adventures from database");
+    throw error;
+  }
+}
+
+export async function getAdventureById(adventureId: string): Promise<UserPlans | null> {
+  try {
+    const result = await db
+      .select()
+      .from(userPlans)
+      .where(eq(userPlans.id, adventureId));
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("Failed to get adventure by ID from database");
+    throw error;
+  }
+}
