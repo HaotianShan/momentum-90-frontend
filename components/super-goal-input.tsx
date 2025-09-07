@@ -78,7 +78,7 @@ export default function SuperGoalInput() {
 
   const exampleGoals = [
     "Write my first novel",
-    "Learn web development",
+    "How to start a business",
     "Run a marathon",
   ];
 
@@ -157,7 +157,7 @@ export default function SuperGoalInput() {
                       key={index}
                       type="button"
                       onClick={() => setSuperGoal(example)}
-                      className="px-2.5 py-1 xs:px-3 xs:py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 text-xs xs:text-xs sm:text-sm md:text-base bg-slate-700/50 hover:bg-orange-500/10 text-slate-300 hover:text-orange-500 border border-transparent hover:border-orange-500/20 rounded-full transition-all hover-scale whitespace-nowrap"
+                      className="px-2.5 py-1 sm:px-4 sm:py-2 md:px-5 md:py-2.5 text-xs xs:text-xs sm:text-sm md:text-base bg-slate-700/50 hover:bg-orange-500/10 text-slate-300 hover:text-orange-500 border border-transparent hover:border-orange-500/20 rounded-full transition-all hover-scale whitespace-nowrap"
                     >
                       {example}
                     </button>

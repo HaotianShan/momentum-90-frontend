@@ -46,7 +46,7 @@ const GlobalFocusText = () => {
       {/* Blurred Base Text */}
       <span
         className="bg-gradient-hero bg-clip-text text-transparent"
-        style={{ filter: "blur(6px)" }}
+        style={{ filter: "blur(4px)" }}
       >
         Momentum
       </span>

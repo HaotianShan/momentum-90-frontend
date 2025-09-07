@@ -72,8 +72,8 @@ function AdventureContent() {
               if (adventure.superGoal) {
                 // Set the goal from the adventure and continue to generate plan
                 const url = new URL(window.location.href);
-                url.searchParams.set('goal', adventure.superGoal);
-                window.history.replaceState({}, '', url.toString());
+                url.searchParams.set("goal", adventure.superGoal);
+                window.history.replaceState({}, "", url.toString());
                 // Continue to plan generation below
               }
             }
@@ -115,7 +115,7 @@ function AdventureContent() {
           setPlan(data);
           const newQuests = convertPlanToQuests(data);
           setQuests(newQuests);
-          
+
           // Save the generated quests to the database if we have an adventure ID
           if (adventureId && session?.user?.id) {
             try {
@@ -157,7 +157,7 @@ function AdventureContent() {
 
     // Convert the new structure: Month_X.weeks.Week_X
     Object.entries(plan.structured_plan).forEach(([monthKey, monthData]) => {
-      if (monthKey.startsWith('Month_') && monthData.weeks) {
+      if (monthKey.startsWith("Month_") && monthData.weeks) {
         Object.entries(monthData.weeks).forEach(([weekKey, milestone]) => {
           const difficulty = getDifficultyForWeek(questNumber);
           const xp = getXPForDifficulty(difficulty);
@@ -274,12 +274,12 @@ function AdventureContent() {
       if (completed) {
         toast.success("Weekly Goal Complete!", {
           description: "Another productive week in the books. Great work!",
-          icon: '🎉',
+          icon: "🎉",
         });
       } else {
         toast("Quest Status Updated", {
           description: "This quest has been returned to your active list.",
-          icon: '🔄',
+          icon: "🔄",
         });
       }
     } catch (error) {
@@ -303,9 +303,7 @@ function AdventureContent() {
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto" />
-          <p className="text-slate-300">
-            Creating your 90 day plan...
-          </p>
+          <p className="text-slate-300">Creating your 90 day plan...</p>
         </div>
       </div>
     );
@@ -315,19 +313,24 @@ function AdventureContent() {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-center space-y-4 max-w-md mx-auto p-6">
-          <h1 className="text-2xl font-bold text-white">
-            Adventure Not Found
-          </h1>
+          <h1 className="text-2xl font-bold text-white">Adventure Not Found</h1>
           <p className="text-slate-300">
             We couldn't generate your adventure plan. Please try setting your
             super goal again.
           </p>
           <div className="flex gap-3 justify-center">
-            <Button onClick={() => router.push("/")} variant="outline" className="border-slate-600 text-white hover:bg-slate-800">
+            <Button
+              onClick={() => router.push("/")}
+              variant="outline"
+              className="border-slate-600 text-white hover:bg-slate-800"
+            >
               <Home className="w-4 h-4 mr-2" />
               Go Home
             </Button>
-            <Button onClick={() => router.back()} className="bg-orange-500 hover:bg-orange-600 text-white">
+            <Button
+              onClick={() => router.back()}
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Go Back
             </Button>
@@ -346,14 +349,11 @@ function AdventureContent() {
             <Button
               onClick={() => router.push("/")}
               variant="ghost"
-              className="flex items-center gap-2 text-white hover:bg-gray-800"
+              className="flex items-center gap-2 text-white"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Home
             </Button>
-            <h1 className="text-lg font-semibold text-white">
-              Your Adventure
-            </h1>
             <div className="w-20" /> {/* Spacer for centering */}
           </div>
         </div>

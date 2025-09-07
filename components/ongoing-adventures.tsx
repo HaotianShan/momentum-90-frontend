@@ -7,13 +7,7 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress"; // Assumes you have this from shadcn/ui
-import { 
-  MapPin, 
-  Trophy, 
-  Clock,
-  Target,
-  Star,
-} from "lucide-react";
+import { MapPin, Trophy, Clock, Target, Star } from "lucide-react";
 
 // --- Helper Types & Functions (unchanged) ---
 
@@ -27,11 +21,30 @@ interface Adventure {
 }
 
 const getDifficultyLevel = (completedQuestsCount: number) => {
-  if (completedQuestsCount <= 3) return { level: "Novice", color: "bg-green-900/50 text-green-300 border-green-700/50" };
-  if (completedQuestsCount <= 6) return { level: "Explorer", color: "bg-blue-900/50 text-blue-300 border-blue-700/50" };
-  if (completedQuestsCount <= 9) return { level: "Adventurer", color: "bg-purple-900/50 text-purple-300 border-purple-700/50" };
-  if (completedQuestsCount <= 12) return { level: "Hero", color: "bg-orange-900/50 text-orange-300 border-orange-700/50" };
-  return { level: "Legend", color: "bg-red-900/50 text-red-300 border-red-700/50" };
+  if (completedQuestsCount <= 3)
+    return {
+      level: "Novice",
+      color: "bg-green-900/50 text-green-300 border-green-700/50",
+    };
+  if (completedQuestsCount <= 6)
+    return {
+      level: "Explorer",
+      color: "bg-blue-900/50 text-blue-300 border-blue-700/50",
+    };
+  if (completedQuestsCount <= 9)
+    return {
+      level: "Adventurer",
+      color: "bg-purple-900/50 text-purple-300 border-purple-700/50",
+    };
+  if (completedQuestsCount <= 12)
+    return {
+      level: "Hero",
+      color: "bg-orange-900/50 text-orange-300 border-orange-700/50",
+    };
+  return {
+    level: "Legend",
+    color: "bg-red-900/50 text-red-300 border-red-700/50",
+  };
 };
 
 const getDaysElapsed = (createdAt: string) => {
@@ -57,13 +70,13 @@ export const OngoingAdventures = () => {
 
   const fetchAdventures = async () => {
     try {
-      const response = await fetch('/api/adventure/user-adventures');
+      const response = await fetch("/api/adventure/user-adventures");
       if (response.ok) {
         const data = await response.json();
         setAdventures(data);
       }
     } catch (error) {
-      console.error('Failed to fetch adventures:', error);
+      console.error("Failed to fetch adventures:", error);
     }
   };
 
@@ -76,12 +89,14 @@ export const OngoingAdventures = () => {
   }
 
   if (adventures.length === 0) {
-    return <EmptyState onAction={() => router.push('/')} />;
+    return <EmptyState onAction={() => router.push("/")} />;
   }
 
   return (
     <div className="space-y-6 mt-10">
-      <h2 className="text-3xl font-bold text-white tracking-tight">My Adventures</h2>
+      <h2 className="text-3xl font-bold text-white tracking-tight">
+        My Super Goals
+      </h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {adventures.map((adventure) => (
           <AdventureCard key={adventure.id} adventure={adventure} />
@@ -91,18 +106,23 @@ export const OngoingAdventures = () => {
   );
 };
 
-
 // --- Sub-components with Design Improvements ---
 
 const AdventureCard = ({ adventure }: { adventure: Adventure }) => {
   const router = useRouter();
-  const { 
-    id, superGoal, createdAt, quests = [], completedQuests = [], totalXP = 0 
+  const {
+    id,
+    superGoal,
+    createdAt,
+    quests = [],
+    completedQuests = [],
+    totalXP = 0,
   } = adventure;
-  
+
   const totalQuests = quests?.length;
   const completedCount = completedQuests.length;
-  const progress = totalQuests > 0 ? Math.round((completedCount / totalQuests) * 100) : 0;
+  const progress =
+    totalQuests > 0 ? Math.round((completedCount / totalQuests) * 100) : 0;
   const daysElapsed = getDaysElapsed(createdAt);
   const difficulty = getDifficultyLevel(completedCount);
   const isCompleted = progress === 100;
@@ -111,13 +131,15 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => {
     p-6 flex flex-col group cursor-pointer transition-all duration-300
     bg-slate-900/40 border border-slate-800 backdrop-blur-sm
     hover:bg-slate-900/60 hover:border-orange-500/60
-    ${isCompleted ? 'border-yellow-500/40 shadow-lg shadow-yellow-500/10' : ''}
+    ${isCompleted ? "border-yellow-500/40 shadow-lg shadow-yellow-500/10" : ""}
   `;
 
   return (
-    <Card 
+    <Card
       className={cardClasses}
-      onClick={() => router.push(`/adventure?id=${id}&goal=${encodeURIComponent(superGoal)}`)}
+      onClick={() =>
+        router.push(`/adventure?id=${id}&goal=${encodeURIComponent(superGoal)}`)
+      }
     >
       <div className="flex-grow space-y-4">
         {/* --- Card Header: Goal Title and Status --- */}
@@ -132,10 +154,14 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => {
               </div>
             ) : (
               <div className="flex flex-col items-end gap-2">
-                <Badge className={`${difficulty.color} border`}>{difficulty.level}</Badge>
+                <Badge className={`${difficulty.color} border`}>
+                  {difficulty.level}
+                </Badge>
                 <div className="flex items-center gap-1.5 text-amber-400">
                   <Star className="w-4 h-4" />
-                  <span className="text-sm font-medium text-white">{totalXP} XP</span>
+                  <span className="text-sm font-medium text-white">
+                    {totalXP} XP
+                  </span>
                 </div>
               </div>
             )}
@@ -145,10 +171,15 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => {
         {/* --- Progress Section --- */}
         <div className="pt-2">
           <div className="flex justify-between items-end mb-2">
-             <span className="text-base font-semibold text-white">{completedCount} / {totalQuests}</span>
-             <span className="text-sm font-medium text-slate-300">Quests</span>
+            <span className="text-base font-semibold text-white">
+              {completedCount} / {totalQuests}
+            </span>
+            <span className="text-sm font-medium text-slate-300">Quests</span>
           </div>
-          <Progress value={progress} className="h-2.5 bg-slate-700/50 [&>div]:bg-orange-500" />
+          <Progress
+            value={progress}
+            className="h-2.5 bg-slate-700/50 [&>div]:bg-orange-500"
+          />
         </div>
       </div>
 
@@ -163,25 +194,25 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => {
 
 const AdventuresSkeleton = () => (
   <div className="space-y-6 mt-10">
-    <div className="h-8 w-1/3 bg-slate-800 rounded-md animate-pulse"></div>
+    <div className="h-8 w-1/3 bg-slate-800 rounded-md animate-pulse" />
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {[1, 2, 3].map((i) => (
         <Card key={i} className="p-6 bg-slate-900/40 border border-slate-800">
           <div className="flex-grow space-y-4">
             <div className="flex justify-between items-start gap-4">
               <div className="space-y-2">
-                <div className="h-6 w-40 bg-slate-800 rounded animate-pulse"></div>
-                <div className="h-6 w-32 bg-slate-800 rounded animate-pulse"></div>
+                <div className="h-6 w-40 bg-slate-800 rounded animate-pulse" />
+                <div className="h-6 w-32 bg-slate-800 rounded animate-pulse" />
               </div>
-              <div className="h-12 w-20 bg-slate-800 rounded-md animate-pulse"></div>
+              <div className="h-12 w-20 bg-slate-800 rounded-md animate-pulse" />
             </div>
             <div className="pt-2 space-y-2">
-              <div className="h-4 w-1/3 bg-slate-800 rounded animate-pulse"></div>
-              <div className="h-2.5 w-full bg-slate-800 rounded-full animate-pulse"></div>
+              <div className="h-4 w-1/3 bg-slate-800 rounded animate-pulse" />
+              <div className="h-2.5 w-full bg-slate-800 rounded-full animate-pulse" />
             </div>
           </div>
           <div className="mt-6 border-t border-slate-800 pt-4">
-            <div className="h-4 w-1/2 bg-slate-800 rounded animate-pulse"></div>
+            <div className="h-4 w-1/2 bg-slate-800 rounded animate-pulse" />
           </div>
         </Card>
       ))}
@@ -195,7 +226,8 @@ const EmptyState = ({ onAction }: { onAction: () => void }) => (
     <MapPin className="w-12 h-12 text-slate-500 mx-auto mb-4" />
     <h3 className="text-2xl font-bold text-white mb-2">Your Journey Awaits</h3>
     <p className="text-slate-400 mb-6 max-w-md mx-auto">
-      An adventure is a grand goal broken into smaller quests. Start your first 90-day journey now!
+      An adventure is a grand goal broken into smaller quests. Start your first
+      90-day journey now!
     </p>
     <Button onClick={onAction} size="lg">
       <Target className="w-5 h-5 mr-2" />

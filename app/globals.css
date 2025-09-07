@@ -18,6 +18,14 @@
 }
 
 @layer utilities {
+  @keyframes animate-stars {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-2000px);
+    }
+  }
   .text-balance {
     text-wrap: balance;
   }
