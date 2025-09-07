@@ -93,11 +93,16 @@ const NavBar = () => {
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-slate-800 border-slate-700">
+              <DropdownMenuContent
+                align="end"
+                className="w-56 bg-slate-800 border-slate-700"
+              >
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
                     {session.user.name && (
-                      <p className="font-medium text-white">{session.user.name}</p>
+                      <p className="font-medium text-white">
+                        {session.user.name}
+                      </p>
                     )}
                     {session.user.email && (
                       <p className="w-[200px] truncate text-sm text-slate-400">
@@ -117,7 +122,10 @@ const NavBar = () => {
           ) : (
             // Show sign in/up buttons when not authenticated
             <>
-              <Button variant="ghost" asChild className="hidden sm:flex text-white hover:bg-slate-800">
+              <Button
+                asChild
+                className="hidden sm:flex text-white bg-transparent hover:bg-slate-800 hover:text-white border-0 shadow-none"
+              >
                 <Link href="/login">Sign in</Link>
               </Button>
               <Button

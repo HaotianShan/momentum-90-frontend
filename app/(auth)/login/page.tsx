@@ -77,7 +77,7 @@ function LoginContent() {
       <div className="w-full max-w-md overflow-hidden rounded-2xl flex flex-col gap-8">
         {/* Header Section */}
         <header className="flex flex-col items-center gap-2 px-4 text-center sm:px-16">
-          <h1 className="text-3xl font-semibold dark:text-zinc-50">Sign In</h1>
+          <h1 className="text-3xl font-semibold dark:text-zinc-50 ">Sign In</h1>
         </header>
 
         {/* OAuth Providers */}
