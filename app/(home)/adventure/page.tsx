@@ -267,7 +267,18 @@ function AdventureContent() {
         throw new Error("Failed to save progress");
       }
 
-      toast.success(completed ? "Quest completed! 🎉" : "Quest unmarked");
+      // Example using a library like Sonner
+      if (completed) {
+        toast.success("Weekly Goal Complete!", {
+          description: "Another productive week in the books. Great work!",
+          icon: '🎉',
+        });
+      } else {
+        toast("Quest Status Updated", {
+          description: "This quest has been returned to your active list.",
+          icon: '🔄',
+        });
+      }
     } catch (error) {
       console.error("Failed to save quest progress:", error);
       toast.error("Failed to save progress. Please try again.");
@@ -290,7 +301,7 @@ function AdventureContent() {
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto" />
           <p className="text-slate-300">
-            Creating your epic adventure...
+            Creating your 90 day plan...
           </p>
         </div>
       </div>
@@ -332,7 +343,7 @@ function AdventureContent() {
             <Button
               onClick={() => router.push("/")}
               variant="ghost"
-              className="flex items-center gap-2 text-white hover:bg-slate-800"
+              className="flex items-center gap-2 text-white hover:bg-gray-800"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Home
@@ -347,11 +358,6 @@ function AdventureContent() {
 
       {/* Main content */}
       <div className="py-8 px-6">
-        {isSaving && (
-          <div className="fixed top-4 right-4 z-50 bg-orange-500 text-white px-4 py-2 rounded-lg shadow-lg">
-            Saving progress...
-          </div>
-        )}
         <AdventureRoadmap
           goal={plan.goal}
           quests={quests}

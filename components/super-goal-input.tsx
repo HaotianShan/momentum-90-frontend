@@ -31,41 +31,6 @@ export default function SuperGoalInput() {
     checkAuth();
   }, []);
 
-  // useEffect(() => {
-  //   if (submittedGoal) {
-  //     const fetchBanner = async () => {
-  //       try {
-  //         const apiKey = process.env.NEXT_PUBLIC_X_API_KEY;
-  //         if (!apiKey) {
-  //           toast.error("Configuration error - please contact support");
-  //           return;
-  //         }
-  //         const response = await fetch(
-  //           `https://momentum90-backend-2-659784348393.northamerica-northeast2.run.app/generate-banner?text=${encodeURIComponent(
-  //             submittedGoal
-  //           )}`,
-  //           {
-  //             headers: {
-  //               "X-API-KEY": apiKey,
-  //               "Content-Type": "application/json",
-  //             },
-  //           }
-  //         );
-  //         if (!response.ok) {
-  //           throw new Error(`HTTP error! status: ${response.status}`);
-  //         }
-  //         const data = await response.json();
-  //         setBannerUrl(data.public_url);
-  //       } catch (error) {
-  //         console.error("Failed to fetch banner:", error);
-  //         toast.error("Failed to generate banner");
-  //       }
-  //     };
-
-  //     fetchBanner();
-  //   }
-  // }, [submittedGoal]);
-
   const handleGoalSubmission = async (goal: string) => {
     setIsLoading(true);
     try {

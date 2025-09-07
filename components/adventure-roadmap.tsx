@@ -4,18 +4,15 @@ import {
   Crown,
   Flag,
   Lock,
-  MapPin,
   Star,
-  Sword,
   Trophy,
   Zap,
-  Shield,
+  Check,
   Gem,
-  CheckCircle,
 } from "lucide-react";
 import { Card } from "./ui/card";
-import { useState } from "react";
 
+// Interface definitions remain the same
 interface Quest {
   number: number;
   title: string;
@@ -32,104 +29,107 @@ interface AdventureRoadmapProps {
   onQuestToggle?: (questNumber: number, completed: boolean) => void;
 }
 
-export const AdventureRoadmap = ({ goal, quests, onQuestToggle }: AdventureRoadmapProps) => {
-  const [hoveredQuest, setHoveredQuest] = useState<number | null>(null);
-
+export const AdventureRoadmap = ({
+  goal,
+  quests,
+  onQuestToggle,
+}: AdventureRoadmapProps) => {
   const completedQuests = quests.filter((quest) => quest.completed).length;
-  const currentQuest =
-    completedQuests < quests.length ? completedQuests : quests.length - 1;
   const totalXP = quests
     .slice(0, completedQuests)
     .reduce((sum, quest) => sum + quest.xp, 0);
   const progressPercentage = (completedQuests / quests.length) * 100;
+  
+  const getCurrentQuest = () => {
+    if (completedQuests === quests.length) return null;
+    return quests[completedQuests];
+  };
+  const currentQuest = getCurrentQuest();
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "Novice":
-        return "text-green-500 bg-green-50";
+        return "text-green-400 border-green-500/50 bg-green-500/10";
       case "Explorer":
-        return "text-blue-500 bg-blue-50";
+        return "text-blue-400 border-blue-500/50 bg-blue-500/10";
       case "Adventurer":
-        return "text-purple-500 bg-purple-50";
+        return "text-purple-400 border-purple-500/50 bg-purple-500/10";
       case "Hero":
-        return "text-orange-500 bg-orange-50";
+        return "text-orange-400 border-orange-500/50 bg-orange-500/10";
       case "Legend":
-        return "text-red-500 bg-red-50";
+        return "text-red-400 border-red-500/50 bg-red-500/10";
       default:
-        return "text-gray-500 bg-gray-50";
+        return "text-gray-400 border-gray-500/50 bg-gray-500/10";
     }
   };
 
-  const getQuestIcon = (
-    index: number,
-    completed: boolean,
-    isCurrent: boolean
-  ) => {
-    if (completed) return <CheckCircle className="w-8 h-8 text-orange-500" />;
-    if (isCurrent)
-      return <Zap className="w-8 h-8 text-orange-400 animate-glow-pulse" />;
-    if (index < 3) return <Star className="w-8 h-8 text-slate-400" />;
-    if (index < 6) return <Sword className="w-8 h-8 text-slate-400" />;
-    if (index < 9) return <Shield className="w-8 h-8 text-slate-400" />;
-    return <Crown className="w-8 h-8 text-slate-400" />;
+  const renderDescriptionWithLinks = (text: string) => {
+    const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+    const parts = text.split(linkRegex);
+    return (
+      <>
+        {parts.map((part, index) => {
+          if (index % 3 === 2) return null;
+          if (index % 3 === 1) {
+            const url = parts[index + 1];
+            return (
+              <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-orange-300 underline font-medium transition-colors">
+                {part}
+              </a>
+            );
+          }
+          return part;
+        })}
+      </>
+    );
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-8 animate-fade-in">
-      {/* Hero Stats Header */}
-      <Card className="p-8 bg-slate-800/50 border-slate-700/50 shadow-glow relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-orange-600/10"></div>
+    <div className="w-full max-w-5xl mx-auto space-y-8 font-sans px-4">
+      {/* --- MODIFIED --- Header Card is now responsive */}
+      <Card className="p-4 md:p-6 bg-slate-900/50 border-slate-700/50 shadow-glow relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-800 [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
         <div className="relative z-10">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <Flag className="w-8 h-8 animate-float text-orange-500" />
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <Flag className="w-7 h-7 md:w-8 md:h-8 text-orange-500 shrink-0" />
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-white">{goal}</h1>
-                <p className="text-slate-300 text-lg">
-                  Your Epic 90-Day Adventure
-                </p>
+                <h1 className="text-2xl md:text-3xl font-bold text-white">{goal}</h1>
+                <p className="text-slate-400 text-sm md:text-base">Your Epic 90-Day Adventure</p>
               </div>
             </div>
-            <div className="text-right">
-              <div className="flex items-center gap-2 mb-2">
-                <Trophy className="w-6 h-6 text-orange-500" />
-                <span className="text-2xl font-bold text-white">{totalXP}</span>
-                <span className="text-slate-300">XP</span>
-              </div>
-              <div className="text-slate-300 text-sm">
-                Level {Math.floor(totalXP / 1000) + 1} Adventurer
+            <div className="flex items-center gap-4 p-3 rounded-lg bg-slate-800/50 self-stretch md:self-auto">
+              <Trophy className="w-6 h-6 text-orange-500" />
+              <div>
+                <span className="text-xl md:text-2xl font-bold text-white">{totalXP}</span>
+                <span className="text-slate-400"> XP</span>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
+                  Level {Math.floor(totalXP / 1000) + 1}
+                </div>
               </div>
             </div>
           </div>
-
-          {/* Progress Bar */}
-          <div className="space-y-3">
-            <div className="flex justify-between text-slate-200 font-medium">
-              <span>
-                {completedQuests} of {quests.length} quests completed
-              </span>
-              <span>{Math.round(progressPercentage)}% complete</span>
+          {/* Progress Bar Section remains largely the same */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-slate-300 font-medium text-sm">
+              <span>Progress</span>
+              <span>{completedQuests} / {quests.length} Quests</span>
             </div>
-            <div className="w-full h-4 bg-slate-700/50 rounded-full overflow-hidden">
+            <div className="w-full h-3 bg-slate-700/50 rounded-full overflow-hidden">
               <div
-                className="h-full bg-orange-500 transition-all duration-1000 rounded-full relative"
+                className="h-full bg-gradient-to-r from-orange-500 to-orange-400 transition-all duration-1000 ease-out rounded-full"
                 style={{ width: `${progressPercentage}%` }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-orange-300/20 animate-slide-in-right"></div>
-              </div>
+              />
             </div>
-            <div className="text-center">
-              {completedQuests === quests.length ? (
-                <div className="flex items-center justify-center gap-2 animate-bounce-gentle">
-                  <Crown className="w-6 h-6 text-orange-500" />
-                  <span className="text-lg font-bold text-white">
-                    Quest Complete! You're a Legend! 🎉
-                  </span>
+            <div className="text-center pt-2">
+              {progressPercentage === 100 ? (
+                <div className="flex items-center justify-center gap-2 text-green-400">
+                  <Crown className="w-5 h-5" />
+                  <span className="text-lg font-bold">Adventure Complete! 🎉</span>
                 </div>
               ) : (
-                <span className="text-slate-300">
-                  Next milestone: Week {currentQuest + 1} -{" "}
-                  {quests[currentQuest]?.title}
+                <span className="text-slate-400 text-sm truncate">
+                  <strong className="text-slate-200">Next Up:</strong> {currentQuest?.title}
                 </span>
               )}
             </div>
@@ -137,195 +137,107 @@ export const AdventureRoadmap = ({ goal, quests, onQuestToggle }: AdventureRoadm
         </div>
       </Card>
 
-      {/* Adventure Path */}
-      <div className="relative">
-        {/* Path Line */}
-        <div className="absolute left-8 top-20 bottom-20 w-1 bg-gradient-to-b from-orange-500 via-orange-400 to-orange-500 rounded-full"></div>
+      {/* --- MODIFIED --- Adventure Path now uses responsive layouts */}
+      <div className="space-y-4 md:space-y-6">
+        {quests.map((quest) => {
+          const isCompleted = quest.completed ?? false;
+          const isCurrent = quest.number === currentQuest?.number;
+          const isLocked = !isCompleted && !isCurrent;
+          const buttonCursor = !isLocked && onQuestToggle ? "cursor-pointer" : "cursor-default";
 
-        <div className="space-y-6">
-          {quests.map((quest, index) => {
-            const isCompleted = quest.completed;
-            const isCurrent = index === currentQuest && !isCompleted;
-            const isLocked = index > currentQuest;
-
-            return (
-              <div
-                key={quest.number}
-                className={`relative transition-all duration-300 ${
-                  hoveredQuest === index ? "transform scale-[1.02]" : ""
-                }`}
-                onMouseEnter={() => setHoveredQuest(index)}
-                onMouseLeave={() => setHoveredQuest(null)}
-              >
-                {/* Quest Node */}
-                <div className="absolute left-4 top-8 z-10">
-                  <div
-                    className={`
-                    w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300
-                    ${
-                      isCompleted
-                        ? "bg-orange-500/20 border-4 border-orange-500 shadow-glow"
-                        : ""
-                    }
-                    ${
-                      isCurrent
-                        ? "bg-orange-400/20 border-4 border-orange-400 shadow-soft animate-glow-pulse"
-                        : ""
-                    }
-                    ${
-                      isLocked
-                        ? "bg-slate-700 border-4 border-slate-600/30"
-                        : ""
-                    }
-                    ${
-                      !isCompleted && !isCurrent && !isLocked
-                        ? "bg-slate-800 border-4 border-slate-700"
-                        : ""
-                    }
-                  `}
-                  >
-                    {isLocked ? (
-                      <Lock className="w-8 h-8 text-slate-500" />
-                    ) : (
-                      getQuestIcon(index, isCompleted || false, isCurrent)
-                    )}
-                  </div>
+          return (
+            <Card
+              key={quest.number}
+              className={`
+                transition-all duration-300 border overflow-hidden
+                ${isLocked ? "bg-slate-800/40 border-slate-700/30" : "bg-slate-800/70 border-slate-700/80"}
+                ${isCurrent ? "!border-orange-500/80 shadow-2xl shadow-orange-900/50" : ""}
+                ${isCompleted ? "border-slate-700/50" : ""}
+              `}
+            >
+              {/* --- NEW --- Using Grid for powerful responsive layout changes */}
+              <div className="flex lg:grid lg:grid-cols-[minmax(0,1.2fr)_auto_minmax(0,2fr)]">
+                {/* --- Left / Title Section (Visible as first column on LG screens) --- */}
+                <div className={`p-4 lg:p-5 ${isLocked ? "opacity-50" : ""} hidden lg:block`}>
+                  <p className="text-sm font-semibold text-orange-400">Quest {quest.number}</p>
+                  <h3 className="text-lg font-bold text-white">{quest.title}</h3>
                 </div>
 
-                {/* Quest Card */}
-                <Card
-                  className={`
-                  ml-24 p-6 transition-all duration-300 hover:shadow-card bg-slate-800/50 border-slate-700/50
-                  ${
-                    isCompleted
-                      ? "bg-orange-500/5 border-orange-500/20 shadow-soft"
-                      : ""
-                  }
-                  ${isCurrent ? "bg-orange-400/5 border-orange-400/20 shadow-card" : ""}
-                  ${
-                    isLocked
-                      ? "bg-slate-700/20 border-slate-600/10 opacity-60"
-                      : ""
-                  }
-                  ${!isLocked && onQuestToggle ? "cursor-pointer hover:scale-[1.01]" : ""}
-                `}
-                  onClick={() => {
-                    if (!isLocked && onQuestToggle) {
-                      onQuestToggle(quest.number, !isCompleted);
-                    }
-                  }}
-                >
-                  <div className="space-y-4">
-                    {/* Quest Header */}
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-medium text-slate-400">
-                            Week {quest.number}
-                          </span>
-                          <div
-                            className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
-                              quest.difficulty
-                            )}`}
-                          >
-                            {quest.difficulty}
-                          </div>
-                          <div className="flex items-center gap-1 text-amber-400">
-                            <Gem className="w-4 h-4" />
-                            <span className="text-sm font-medium">
-                              {quest.xp} XP
-                            </span>
-                          </div>
-                        </div>
-                        <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                          {quest.title}
-                          {isCurrent && (
-                            <span className="text-orange-400 animate-glow-pulse">
-                              ← You are here!
-                            </span>
-                          )}
-                        </h3>
-                      </div>
-
-                      {isCompleted && (
-                        <div className="flex items-center gap-1 text-orange-500 animate-bounce-gentle">
-                          <Trophy className="w-5 h-5" />
-                          <span className="text-sm font-medium">Complete!</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Quest Description */}
-                    <p className="text-slate-300 leading-relaxed">
-                      {quest.description}
-                    </p>
-
-                    {/* Reward Badge */}
-                    <div className="flex items-center gap-2 p-3 bg-orange-500/10 rounded-lg border border-orange-500/20">
-                      <Star className="w-5 h-5 text-orange-400" />
-                      <span className="text-sm font-medium text-orange-300">
-                        <strong>Reward:</strong> {quest.reward}
-                      </span>
-                    </div>
-
-                    {/* Action Hint */}
-                    {isCurrent && !isLocked && (
-                      <div className="mt-4 p-4 bg-orange-500/10 border-l-4 border-orange-500 rounded-r-lg animate-fade-in">
-                        <p className="text-sm text-orange-400 font-medium">
-                          🎯 Ready to tackle this challenge? Click to mark as complete when done!
-                        </p>
-                      </div>
-                    )}
-                    
-                    {/* Click hint for completed quests */}
-                    {isCompleted && onQuestToggle && (
-                      <div className="mt-4 p-3 bg-green-900/20 border-l-4 border-green-500 rounded-r-lg">
-                        <p className="text-sm text-green-300 font-medium">
-                          ✅ Completed! Click to unmark if needed.
-                        </p>
-                      </div>
-                    )}
+                {/* --- Center / Timeline Section --- */}
+                <div className="relative flex-shrink-0 w-16 lg:w-20 flex justify-center">
+                  <div className="absolute top-0 bottom-0 w-1.5 lg:w-2 bg-slate-700 rounded-full"></div>
+                  {isCompleted && <div className="absolute top-0 bottom-0 w-1.5 lg:w-2 bg-gradient-to-b from-orange-500 to-amber-500"></div>}
+                  <button
+                    onClick={() => onQuestToggle && onQuestToggle(quest.number, !isCompleted)}
+                    disabled={isLocked || !onQuestToggle}
+                    className={`
+                      absolute top-1/2 -translate-y-1/2 z-10
+                      w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center transition-all duration-300
+                      ring-8 ring-slate-800 ${buttonCursor} transform
+                      focus:outline-none focus:ring-4 focus:ring-orange-500/50 active:scale-90
+                      ${isCompleted ? "bg-orange-500 text-white" : ""}
+                      ${isCurrent ? "bg-orange-400/20 border-2 border-orange-400 text-orange-400 animate-pulse lg:scale-110" : ""}
+                      ${isLocked ? "bg-slate-700 text-slate-500 border-2 border-slate-600" : ""}
+                    `}
+                  >
+                    {isLocked ? <Lock className="w-6 h-6" /> : isCompleted ? <Check className="w-7 h-7" /> : <Zap className="w-6 h-6" />}
+                  </button>
+                </div>
+                
+                {/* --- Right / Details Section --- */}
+                <div className={`flex-1 p-4 lg:p-5 ${isLocked ? "opacity-50" : ""}`}>
+                  {/* Title block for mobile/tablet view */}
+                  <div className="block lg:hidden mb-2">
+                     <p className="text-sm font-semibold text-orange-400">Quest {quest.number}</p>
+                     <h3 className="text-lg font-bold text-white">{quest.title}</h3>
                   </div>
-                </Card>
-              </div>
-            );
-          })}
-        </div>
+                  
+                  {/* Tags and Description */}
+                  <div className="space-y-3">
+                     <div className="flex flex-wrap items-center gap-3">
+                       <div className={`px-2 py-0.5 rounded-md text-xs font-semibold border ${getDifficultyColor(quest.difficulty)}`}>
+                         {quest.difficulty}
+                       </div>
+                       <div className="flex items-center gap-1.5 text-amber-400">
+                         <Gem className="w-4 h-4" />
+                         <span className="text-sm font-medium">{quest.xp} XP</span>
+                       </div>
+                     </div>
+                     <p className="text-slate-400 leading-relaxed text-sm md:text-base">
+                       {renderDescriptionWithLinks(quest.description)}
+                     </p>
+                  </div>
 
-        {/* Final Victory Banner */}
-        {completedQuests === quests.length && (
-          <div className="mt-12 text-center animate-bounce-gentle">
-            <Card className="p-8 bg-slate-800/50 border-slate-700/50 shadow-glow">
-              <div className="space-y-4">
-                <Crown className="w-16 h-16 mx-auto animate-float text-orange-500" />
-                <h2 className="text-3xl font-bold text-white">🎉 QUEST COMPLETED! 🎉</h2>
-                <p className="text-xl text-slate-300">
-                  You've conquered your 90-day adventure and earned the title of{" "}
-                  <strong>Master Achiever</strong>!
-                </p>
-                <div className="flex items-center justify-center gap-6 pt-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{totalXP}</div>
-                    <div className="text-sm text-slate-400">
-                      Total XP Earned
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{quests.length}</div>
-                    <div className="text-sm text-slate-400">
-                      Quests Mastered
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-white">90</div>
-                    <div className="text-sm text-slate-400">
-                      Days of Growth
-                    </div>
+                  {/* Reward */}
+                  <div className="flex items-center gap-2 p-2 bg-slate-900/50 rounded-md mt-4">
+                    <Star className="w-5 h-5 text-orange-400 shrink-0" />
+                    <span className="text-sm text-slate-300">
+                      <strong className="font-semibold text-orange-300">Reward:</strong> {quest.reward}
+                    </span>
                   </div>
                 </div>
               </div>
             </Card>
-          </div>
+          );
+        })}
+
+        {/* --- Final celebratory card is already responsive --- */}
+        {progressPercentage === 100 && (
+          <Card className="border-amber-400/50 bg-slate-800/80 shadow-lg shadow-amber-900/40">
+            <div className="p-6 md:p-8 text-center flex flex-col items-center gap-4">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-amber-400 to-orange-500 text-white">
+                <Crown className="w-8 h-8 md:w-9 md:h-9" />
+              </div>
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-amber-300 mb-2">
+                  Victory! The Goal is Achieved!
+                </h3>
+                <p className="text-slate-300 max-w-lg mx-auto text-sm md:text-base">
+                  You have conquered every quest and completed your adventure. Well done!
+                </p>
+              </div>
+            </div>
+          </Card>
         )}
       </div>
     </div>
