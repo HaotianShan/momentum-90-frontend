@@ -36,7 +36,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b backdrop-blur-md bg-white/80">
+    <nav className="sticky top-0 z-50 w-full backdrop-blur-md bg-slate-950/80 border-b border-slate-800/50">
       <div className="flex h-16 items-center justify-between px-4 sm:px-10">
         {/* Logo */}
         <Link href="/">
@@ -53,7 +53,7 @@ const NavBar = () => {
               M
             </span>
             <span
-              className="ml-0.5"
+              className="ml-0.5 text-white"
               style={{ fontFamily: "geist, sans-serif" }}
             >
               90
@@ -65,7 +65,7 @@ const NavBar = () => {
         <div className="flex items-center space-x-2">
           {status === "loading" ? (
             // Show loading state
-            <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse" />
+            <div className="w-8 h-8 bg-slate-700 rounded-full animate-pulse" />
           ) : session?.user ? (
             // Show user dropdown when authenticated
             <DropdownMenu>
@@ -93,14 +93,14 @@ const NavBar = () => {
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-56 bg-slate-800 border-slate-700">
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
                     {session.user.name && (
-                      <p className="font-medium">{session.user.name}</p>
+                      <p className="font-medium text-white">{session.user.name}</p>
                     )}
                     {session.user.email && (
-                      <p className="w-[200px] truncate text-sm text-muted-foreground">
+                      <p className="w-[200px] truncate text-sm text-slate-400">
                         {session.user.email}
                       </p>
                     )}
@@ -108,7 +108,7 @@ const NavBar = () => {
                 </div>
                 <DropdownMenuItem
                   onClick={handleSignOut}
-                  className="cursor-pointer"
+                  className="cursor-pointer text-white hover:bg-slate-700"
                 >
                   Sign out
                 </DropdownMenuItem>
@@ -117,12 +117,12 @@ const NavBar = () => {
           ) : (
             // Show sign in/up buttons when not authenticated
             <>
-              <Button variant="ghost" asChild className="hidden sm:flex">
+              <Button variant="ghost" asChild className="hidden sm:flex text-white hover:bg-slate-800">
                 <Link href="/login">Sign in</Link>
               </Button>
               <Button
                 asChild
-                className="rounded-full bg-[#FC7B11] hover:bg-[#FC7B11]/90 font-semibold transition-colors"
+                className="rounded-full bg-[#FC7B11] hover:bg-[#FC7B11]/90 font-semibold transition-colors text-white"
               >
                 <Link href="/register">Sign up</Link>
               </Button>

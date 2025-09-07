@@ -6,17 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { submitSuperGoal, checkUserLoggedIn } from "@/app/actions";
 import { toast } from "sonner";
-import { ArrowRightIcon, TargetIcon, SparklesIcon } from "@/components/icons";
+import { ArrowRightIcon, TargetIcon } from "@/components/icons";
 import dotenv from "dotenv";
 dotenv.config();
-
 
 export default function SuperGoalInput() {
   const [superGoal, setSuperGoal] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,7 +30,6 @@ export default function SuperGoalInput() {
 
     checkAuth();
   }, []);
-
 
   // useEffect(() => {
   //   if (submittedGoal) {
@@ -78,7 +75,11 @@ export default function SuperGoalInput() {
         setSuperGoal("");
         // Redirect to adventure page with both the adventure ID and goal
         if (result.adventureId) {
-          router.push(`/adventure?id=${result.adventureId}&goal=${encodeURIComponent(goal)}`);
+          router.push(
+            `/adventure?id=${result.adventureId}&goal=${encodeURIComponent(
+              goal
+            )}`
+          );
         } else {
           // Fallback to goal parameter if no adventure ID
           router.push(`/adventure?goal=${encodeURIComponent(goal)}`);
@@ -111,95 +112,95 @@ export default function SuperGoalInput() {
   };
 
   const exampleGoals = [
-    "Master guitar in 90 days",
-    "Launch my online business",
     "Write my first novel",
     "Learn web development",
     "Run a marathon",
   ];
 
   return (
-    <section className="py-2 px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="w-full max-w-2xl mx-auto animate-fade-in">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Input Section */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-hero rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-all"></div>
-                <div className="relative bg-card border-2 border-border hover:border-orange-500 focus-within:border-orange-500 transition-all rounded-2xl p-1 shadow-card hover:shadow-glow">
-                  <div className="relative flex items-center">
-                    <TargetIcon className="absolute left-6 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6 group-hover:text-primary transition-colors z-10" />
-                    <Input
-                      type="text"
-                      placeholder={
-                        isAuthenticated
-                          ? "What's your epic quest?"
-                          : "Click to login and set your super goal"
-                      }
-                      value={superGoal}
-                      onChange={(e) => setSuperGoal(e.target.value)}
-                      onClick={handleInputClick}
-                      className="pl-16 pr-32 py-8 text-lg rounded-xl border-0 bg-transparent focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 flex-1"
-                      disabled={isLoading}
-                    />
-                    {isAuthenticated && (
-                      <Button
-                        type="submit"
-                        variant="ghost"
-                        size="sm"
-                        disabled={!superGoal.trim() || isAnimating || isLoading}
-                        className={`absolute right-2 py-2 px-3 text-sm font-medium rounded-full transition-all duration-300 group/btn ${
-                          isAnimating ? "animate-bounce-gentle" : ""
-                        } ${
-                          superGoal.trim() && !isLoading && !isAnimating
-                            ? "bg-gradient-to-r from-orange-500/15 to-orange-500/15 hover:from-orange-500/25 hover:to-orange-500/25 border border-orange-500/30 hover:border-orange-500/100 text-orange-500 hover:text-gray-100 shadow-lg hover:shadow-orange-500/20"
-                            : "bg-muted/30 border border-border/50 text-muted-foreground/60"
-                        }`}
-                      >
-                        <div className="flex items-center gap-1.5">
-                          {isLoading ? (
-                            <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
-                          ) : isAnimating ? (
-                            <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full animate-pulse" />
-                          ) : (
-                            <ArrowRightIcon className="w-3 h-3 transition-transform group-hover/btn:translate-x-0.5" />
-                          )}
-                          <span className="hidden sm:inline">
-                            {isLoading
-                              ? "Saving"
-                              : isAnimating
-                              ? "Creating"
-                              : "Start"}
-                          </span>
-                        </div>
-                      </Button>
-                    )}
-                  </div>
+    <section className="py-1 px-3 xs:px-4 sm:px-6 md:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="w-4/5 xs:w-4/5 md:w-4/5 lg:w-3/5 mx-auto animate-fade-in">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-3 xs:space-y-4 sm:space-y-6 md:space-y-8"
+          >
+            {/* Input Section */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-hero rounded-lg xs:rounded-xl sm:rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-all" />
+              <div className="relative bg-slate-800/50 border-2 border-slate-700/50 hover:border-orange-500 focus-within:border-orange-500 transition-all rounded-lg xs:rounded-xl sm:rounded-2xl p-1 shadow-card hover:shadow-glow w-full">
+                <div className="relative flex items-center">
+                  <TargetIcon className="absolute left-2 xs:left-3 sm:left-4 md:left-6 top-1/2 transform -translate-y-1/2 text-slate-400 w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:text-orange-500 transition-colors z-10" />
+                  <Input
+                    type="text"
+                    placeholder={
+                      isAuthenticated
+                        ? "What's your super goal?"
+                        : "Click to login and set your super goal"
+                    }
+                    value={superGoal}
+                    onChange={(e) => setSuperGoal(e.target.value)}
+                    onClick={handleInputClick}
+                    className="pl-8 xs:pl-10 sm:pl-12 md:pl-16 pr-16 xs:pr-20 sm:pr-24 md:pr-32 py-2 xs:py-3 sm:py-4 md:py-8 text-sm xs:text-base sm:text-lg md:text-xl rounded-md xs:rounded-lg sm:rounded-xl border-0 bg-transparent focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 flex-1 placeholder:text-slate-400 text-white placeholder:text-xs xs:placeholder:text-sm sm:placeholder:text-base md:placeholder:text-lg"
+                    disabled={isLoading}
+                  />
+                  {isAuthenticated && (
+                    <Button
+                      type="submit"
+                      variant="ghost"
+                      size="sm"
+                      disabled={!superGoal.trim() || isAnimating || isLoading}
+                      className={`absolute right-0.5 xs:right-1 sm:right-2 py-1 xs:py-1.5 sm:py-2 px-1.5 xs:px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-full transition-all duration-300 group/btn ${
+                        isAnimating ? "animate-bounce-gentle" : ""
+                      } ${
+                        superGoal.trim() && !isLoading && !isAnimating
+                          ? "bg-gradient-to-r from-orange-500/15 to-orange-500/15 hover:from-orange-500/25 hover:to-orange-500/25 border border-orange-500/30 hover:border-orange-500/100 text-orange-500 hover:text-white shadow-lg hover:shadow-orange-500/20"
+                          : "bg-slate-700/30 border border-slate-600/50 text-slate-400/60"
+                      }`}
+                    >
+                      <div className="flex items-center gap-0.5 xs:gap-1 sm:gap-1.5">
+                        {isLoading ? (
+                          <div className="w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 border border-current border-t-transparent rounded-full animate-spin" />
+                        ) : isAnimating ? (
+                          <div className="w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full animate-pulse" />
+                        ) : (
+                          <ArrowRightIcon className="w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 transition-transform group-hover/btn:translate-x-0.5" />
+                        )}
+                        <span className="hidden xs:inline sm:inline">
+                          {isLoading
+                            ? "Saving"
+                            : isAnimating
+                            ? "Creating"
+                            : "Start"}
+                        </span>
+                      </div>
+                    </Button>
+                  )}
                 </div>
               </div>
+            </div>
 
-              {/* Example Goals */}
-              {isAuthenticated && (
-                <div
-                  className="text-center animate-fade-in"
-                  style={{ animationDelay: "0.2s" }}
-                >
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {exampleGoals.map((example, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => setSuperGoal(example)}
-                        className="px-4 py-2 text-sm bg-muted/50 hover:bg-primary/10 text-muted-foreground hover:text-primary border border-transparent hover:border-primary/20 rounded-full transition-all hover-scale"
-                      >
-                        {example}
-                      </button>
-                    ))}
-                  </div>
+            {/* Example Goals */}
+            {isAuthenticated && (
+              <div
+                className="text-center animate-fade-in"
+                style={{ animationDelay: "0.2s" }}
+              >
+                <div className="flex flex-wrap justify-center gap-1 xs:gap-1.5 sm:gap-2 md:gap-3">
+                  {exampleGoals.map((example, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setSuperGoal(example)}
+                      className="px-2.5 py-1 xs:px-3 xs:py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 text-xs xs:text-xs sm:text-sm md:text-base bg-slate-700/50 hover:bg-orange-500/10 text-slate-300 hover:text-orange-500 border border-transparent hover:border-orange-500/20 rounded-full transition-all hover-scale whitespace-nowrap"
+                    >
+                      {example}
+                    </button>
+                  ))}
                 </div>
-              )}
-
-            </form>
+              </div>
+            )}
+          </form>
         </div>
       </div>
     </section>

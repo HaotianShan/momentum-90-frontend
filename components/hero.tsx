@@ -1,5 +1,4 @@
-import { Sparkles, MapPin, Trophy, Zap } from "lucide-react";
-import InteractiveBlurText from "./interactive-blur-text";
+import GlobalFocusText from "./interactive-blur-text";
 
 export default function HeroSection() {
   return (
@@ -23,17 +22,18 @@ export default function HeroSection() {
 
       <div className="container mx-auto max-w-4xl text-center relative z-10">
         {/* Main heading with staggered animation */}
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in mt-16">
-          Build
-          <InteractiveBlurText />
+        <h1 className="text-6xl font-bold md-3 md:mb-5 leading-tight animate-fade-in mt-16 text-white">
+          Building
+          <br />
+          <GlobalFocusText />
         </h1>
 
         {/* Subheading */}
         <p
-          className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in"
+          className="hidden md:block text-sm md:text-lg text-slate-300 max-w-3xl mt-2 mx-auto leading-relaxed animate-fade-in"
           style={{ animationDelay: "0.2s" }}
         >
-          Turn your super goals into a clear, weekly action plan and achieve them in 90 days.
+          Create your 90-day success plan, one week at a time.
         </p>
       </div>
     </section>

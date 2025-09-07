@@ -71,23 +71,23 @@ export const OngoingAdventures = () => {
   };
 
   const getDifficultyLevel = (completedQuests: number) => {
-    if (completedQuests <= 3) return { level: "Novice", color: "bg-green-100 text-green-800" };
-    if (completedQuests <= 6) return { level: "Explorer", color: "bg-blue-100 text-blue-800" };
-    if (completedQuests <= 9) return { level: "Adventurer", color: "bg-purple-100 text-purple-800" };
-    if (completedQuests <= 12) return { level: "Hero", color: "bg-orange-100 text-orange-800" };
-    return { level: "Legend", color: "bg-red-100 text-red-800" };
+    if (completedQuests <= 3) return { level: "Novice", color: "bg-green-900/50 text-green-300 border-green-700/50" };
+    if (completedQuests <= 6) return { level: "Explorer", color: "bg-blue-900/50 text-blue-300 border-blue-700/50" };
+    if (completedQuests <= 9) return { level: "Adventurer", color: "bg-purple-900/50 text-purple-300 border-purple-700/50" };
+    if (completedQuests <= 12) return { level: "Hero", color: "bg-orange-900/50 text-orange-300 border-orange-700/50" };
+    return { level: "Legend", color: "bg-red-900/50 text-red-300 border-red-700/50" };
   };
 
   if (status === "loading") {
     return (
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-foreground">Your Adventures</h2>
+        <h2 className="text-2xl font-bold text-white">My Adventures</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <Card key={i} className="p-6 animate-pulse">
-              <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-muted rounded w-1/2 mb-4"></div>
-              <div className="h-2 bg-muted rounded w-full"></div>
+            <Card key={i} className="p-6 animate-pulse bg-slate-800/50 border-slate-700/50">
+              <div className="h-4 bg-slate-700/50 rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-slate-700/50 rounded w-1/2 mb-4"></div>
+              <div className="h-2 bg-slate-700/50 rounded w-full"></div>
             </Card>
           ))}
         </div>
@@ -102,13 +102,13 @@ export const OngoingAdventures = () => {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-foreground">Your Adventures</h2>
+        <h2 className="text-2xl font-bold text-white">My Adventures</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <Card key={i} className="p-6 animate-pulse">
-              <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-muted rounded w-1/2 mb-4"></div>
-              <div className="h-2 bg-muted rounded w-full"></div>
+            <Card key={i} className="p-6 animate-pulse bg-slate-800/50 border-slate-700/50">
+              <div className="h-4 bg-slate-700/50 rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-slate-700/50 rounded w-1/2 mb-4"></div>
+              <div className="h-2 bg-slate-700/50 rounded w-full"></div>
             </Card>
           ))}
         </div>
@@ -119,9 +119,9 @@ export const OngoingAdventures = () => {
   if (adventures.length === 0) {
     return (
       <div className="text-center py-12">
-        <MapPin className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-foreground mb-2">No Adventures Yet</h3>
-        <p className="text-muted-foreground mb-6">
+        <MapPin className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+        <h3 className="text-xl font-semibold text-white mb-2">No Adventures Yet</h3>
+        <p className="text-slate-300 mb-6">
           Start your first 90-day adventure by setting a super goal!
         </p>
         <Button onClick={() => router.push('/')} className="gap-2">
@@ -133,13 +133,9 @@ export const OngoingAdventures = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-10">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Your Adventures</h2>
-        <Button onClick={() => router.push('/')} variant="outline" className="gap-2">
-          <Target className="w-4 h-4" />
-          New Adventure
-        </Button>
+        <h2 className="text-2xl font-bold text-white">My Adventures</h2>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -152,14 +148,14 @@ export const OngoingAdventures = () => {
           return (
             <Card 
               key={adventure.id} 
-              className="p-6 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+              className="p-6 hover:shadow-lg transition-all duration-200 cursor-pointer group bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/70"
               onClick={() => router.push(`/adventure?id=${adventure.id}&goal=${encodeURIComponent(adventure.superGoal)}`)}
             >
               <div className="space-y-4">
                 {/* Header */}
                 <div className="space-y-2">
                   <div className="flex items-start justify-between">
-                    <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+                    <h3 className="font-semibold text-white line-clamp-2 group-hover:text-orange-500 transition-colors">
                       {adventure.superGoal}
                     </h3>
                     {isCompleted && (
@@ -168,7 +164,7 @@ export const OngoingAdventures = () => {
                   </div>
                   
                   <div className="flex items-center gap-2">
-                    <Badge className={difficulty.color}>
+                    <Badge className={`${difficulty.color} border`}>
                       {difficulty.level}
                     </Badge>
                     <div className="flex items-center gap-1 text-amber-500">
@@ -183,21 +179,21 @@ export const OngoingAdventures = () => {
                 {/* Progress */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
+                    <span className="text-slate-300">
                       {adventure.completedQuests?.length || 0} of {adventure.quests?.length || 0} quests
                     </span>
-                    <span className="font-medium">{progress}%</span>
+                    <span className="font-medium text-white">{progress}%</span>
                   </div>
-                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-slate-700/50 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-primary transition-all duration-500 rounded-full"
+                      className="h-full bg-orange-500 transition-all duration-500 rounded-full"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
                 </div>
 
                 {/* Stats */}
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <div className="flex items-center justify-between text-sm text-slate-300">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
                     <span>{daysSinceStart} days</span>
