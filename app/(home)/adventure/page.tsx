@@ -12,8 +12,12 @@ interface PlanResponse {
   success: boolean;
   goal: string;
   structured_plan: {
-    monthly_actions: Record<string, string>;
-    weekly_milestones: Record<string, string>;
+    [monthKey: string]: {
+      action: string;
+      weeks: {
+        [weekKey: string]: string;
+      };
+    };
   };
 }
 
@@ -59,10 +63,7 @@ function AdventureContent() {
               setPlan({
                 success: true,
                 goal: adventure.superGoal,
-                structured_plan: {
-                  monthly_actions: {},
-                  weekly_milestones: {},
-                },
+                structured_plan: {},
               });
               setIsLoading(false);
               return;
@@ -154,24 +155,26 @@ function AdventureContent() {
     const quests: Quest[] = [];
     let questNumber = 1;
 
-    // Convert weekly milestones to quests
-    Object.entries(plan.structured_plan.weekly_milestones).forEach(
-      ([week, milestone]) => {
-        const difficulty = getDifficultyForWeek(questNumber);
-        const xp = getXPForDifficulty(difficulty);
+    // Convert the new structure: Month_X.weeks.Week_X
+    Object.entries(plan.structured_plan).forEach(([monthKey, monthData]) => {
+      if (monthKey.startsWith('Month_') && monthData.weeks) {
+        Object.entries(monthData.weeks).forEach(([weekKey, milestone]) => {
+          const difficulty = getDifficultyForWeek(questNumber);
+          const xp = getXPForDifficulty(difficulty);
 
-        quests.push({
-          number: questNumber,
-          title: formatWeekTitle(week),
-          description: milestone,
-          completed: false, // You can implement completion tracking later
-          reward: getRewardForWeek(questNumber),
-          difficulty,
-          xp,
+          quests.push({
+            number: questNumber,
+            title: formatWeekTitle(weekKey),
+            description: milestone,
+            completed: false, // You can implement completion tracking later
+            reward: getRewardForWeek(questNumber),
+            difficulty,
+            xp,
+          });
+          questNumber++;
         });
-        questNumber++;
       }
-    );
+    });
 
     return quests;
   };

@@ -100,7 +100,7 @@ const AdventureCard = ({ adventure }: { adventure: Adventure }) => {
     id, superGoal, createdAt, quests = [], completedQuests = [], totalXP = 0 
   } = adventure;
   
-  const totalQuests = quests.length;
+  const totalQuests = quests?.length;
   const completedCount = completedQuests.length;
   const progress = totalQuests > 0 ? Math.round((completedCount / totalQuests) * 100) : 0;
   const daysElapsed = getDaysElapsed(createdAt);
