@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
@@ -15,6 +15,7 @@ import { toast } from "sonner";
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { update } = useSession();
   const [email, setEmail] = useState("");
   const [isSuccessful, setIsSuccessful] = useState(false);
 
@@ -38,6 +39,21 @@ function LoginContent() {
 
   // Handle form submission states
   useEffect(() => {
+    const handleSuccess = async () => {
+      setIsSuccessful(true);
+      // Update the session to reflect the new authentication state
+      await update();
+      // Check if there's a pending super goal
+      const pendingGoal = sessionStorage.getItem("pendingSuperGoal");
+      if (pendingGoal) {
+        sessionStorage.removeItem("pendingSuperGoal");
+        // Redirect to home with a flag to show the goal was saved
+        router.push("/?goalSaved=true");
+      } else {
+        router.push("/");
+      }
+    };
+
     switch (state.status) {
       case "failed":
         toast.error("Invalid credentials!");
@@ -46,21 +62,10 @@ function LoginContent() {
         toast.error("Failed validating your submission!");
         break;
       case "success":
-        setIsSuccessful(true);
-        router.refresh();
-        // Check if there's a pending super goal
-        // biome-ignore lint/correctness/noSwitchDeclarations: <explanation>
-        const pendingGoal = sessionStorage.getItem("pendingSuperGoal");
-        if (pendingGoal) {
-          sessionStorage.removeItem("pendingSuperGoal");
-          // Redirect to home with a flag to show the goal was saved
-          router.push("/?goalSaved=true");
-        } else {
-          router.push("/");
-        }
+        handleSuccess();
         break;
     }
-  }, [state.status, router]);
+  }, [state.status, router, update]);
 
   const handleSubmit = (formData: FormData) => {
     setEmail(formData.get("email") as string);
